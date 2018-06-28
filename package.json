@@ -1,0 +1,19 @@
+{
+  "name": "actoservice-sdk",
+  "version": "1.0.0",
+  "description": "An Actoservice-sdk to build templates for actoservice platform",
+  "main": "index.js",
+  "bin": {
+    "actoservice": "./bin/cli.js"
+  },
+  "dependencies": {
+    "lodash": "4.17.10",
+    "request": "2.87.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Shahen Hovhannisyan<shahen.hovhannisyan.94@gmail.com>",
+  "license": "ISC"
+}
