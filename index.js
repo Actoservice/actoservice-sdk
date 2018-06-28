@@ -2,31 +2,16 @@
  * @flow
  */
 
-const set = require('lodash/set');
-const cloneDeep = require('lodash/cloneDeep');
 const get = require('lodash/get');
-const theme = require('./theme');
 const types = require('./types');
+const actoservice = require('./actoservice');
 
-// type Options = {
-//   type: string,
-// };
-// type ThemesOptions = {
-//   name: string,
-//   description?: string
-// };
+export const bindValue = (key) =>
+  get(
+    get(actoservice.configMap, key),
+    'defaultValue',
+    get(actoservice.configMap, key)
+  );
 
-// type UploadParams = {
-//   root?: *,
-// } & ThemesOptions;
-
-const dependencyGraph = {};
-let configMap = null;
-
-export const setConfigMap = (object) => {
-  configMap = cloneDeep(object);
-}
-
-export const bindValue = (key) => get(configMap, key).defaultValue;
-
+export default actoservice;
 export const Types = types;
