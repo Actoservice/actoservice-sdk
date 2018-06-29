@@ -24,12 +24,38 @@ const config = Object.assign({}, defaultConfig, packageJson.actoservice);
 const rootRelativeEntry = path.join(process.cwd(), config.entry);
 const rootRelativeConfigMap = path.join(process.cwd(), config.configMap);
 
-const preData = {
+let preData = {
   name: config.name,
   description: config.description,
   source: fs.createReadStream(rootRelativeEntry),
   configMap: fs.createReadStream(rootRelativeConfigMap)
 }
+
+const entryFileName = path.basename(config.entry);
+const schemeFilename = path.basename(config.configMap);
+
+if (config.assets && fs.lstatSync(config.assets).isDirectory()) {
+  const assets = fs
+    .readdirSync(config.assets)
+    .filter((filename) =>
+      filename !== entryFileName &&
+      filename !== schemeFilename &&
+      !filename.includes('html')
+    )
+    .reduce((all, curr) => {
+      const absPath = path.join(process.cwd(), config.assets, curr);
+      return {
+        ...all,
+        [path.basename(curr)]: fs.createReadStream(absPath)
+      }
+    }, {});
+
+  preData = {
+    ...preData,
+    ...assets
+  }
+}
+
 const HOST = 'http://0.0.0.0:3000/api/v1/themes';
 
 upload(preData);

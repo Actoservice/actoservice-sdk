@@ -1,6 +1,6 @@
 export default {
-  string: "string",
-  number: "number",
-  color: "color",
-  phone: "phone"
+  string: "AS:string",
+  number: "AS:number",
+  color: "AS:color",
+  phone: "AS:phone"
 }
