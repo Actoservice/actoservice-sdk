@@ -11,7 +11,7 @@ class Actoservice extends React.Component {
     this.state = {
       configMap: window.__ACTOSERVICE__SCHEME__
     };
-    delete window.__ACTOSERVICE__SCHEME__;
+    window.__ACTOSERVICE__SCHEME__ = null;
   }
 
   componentDidMount() {
