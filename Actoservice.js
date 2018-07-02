@@ -1,9 +1,13 @@
 import React from 'react';
 import get from 'lodash/get';
+import omit from 'lodash/omit';
 import isObject from 'lodash/isObject';
+import merge from 'lodash/merge';
 const assign = require('lodash/assign');
 const actoserviceContext = React.createContext();
 const { Provider, Consumer } = actoserviceContext;
+
+const actionIdentifier = '__ACTOSERVICE__ACTION__';
 
 class Actoservice extends React.Component {
   constructor(props) {
@@ -16,6 +20,10 @@ class Actoservice extends React.Component {
 
   componentDidMount() {
     const { scheme } = this.props;
+    if (this._isIframe()) {
+      this._registerListener();
+    }
+
     if (!this.props.scheme && !this.state.configMap) {
       console.error('Scheme is not specified');
       return;
@@ -34,8 +42,35 @@ class Actoservice extends React.Component {
     }
   }
 
+  _isIframe() {
+    return window.self !== window.top;
+  }
+
+  _isASAction(action) {
+    return get(action, actionIdentifier);
+  }
+
+  _registerListener() {
+    window.onmessage = ({ origin, data }) => {
+      console.log('message received', origin, data);
+      if (this._isASAction(data)) {
+        this.updateConfig(get(data, 'payload'));
+      } else {
+        console.warn('invalid update');
+      }
+    }
+  }
+
   updateConfig(configuration) {
-    this.setState({ configMap: configuration });
+    const newConfig = merge(
+      this.state.configMap,
+      configuration,
+    );
+
+    console.log(newConfig);
+    this.setState({
+      configMap: newConfig
+    });
   }
 
   render() {
