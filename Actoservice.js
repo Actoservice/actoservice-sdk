@@ -67,7 +67,6 @@ class Actoservice extends React.Component {
       configuration,
     );
 
-    console.log(newConfig);
     this.setState({
       configMap: newConfig
     });
@@ -75,27 +74,30 @@ class Actoservice extends React.Component {
 
   render() {
     const { configMap } = this.state;
+    const { children } = this.props;
     return (
-      React.createElement(Provider, {
-        value: { configMap }
-      }, [
-        React.Children.only(this.props.children)
-      ])
+      <Provider
+        value={{ configMap }}
+      >
+        {React.Children.only(children)}
+      </Provider>
     );
   }
 }
 
+const getValue = (key) =>
+  ({ configMap }) =>
+    get(
+      get(configMap, key),
+      'defaultValue',
+      get(configMap, key)
+    );
+
 export function bind(key) {
   return (
-    React.createElement(
-      Consumer,
-      null,
-      ({ configMap }) => get(
-        get(configMap, key),
-        'defaultValue',
-        get(configMap, key)
-      )
-    )
+    <Consumer>
+      {getValue(key)}
+    </Consumer>
   );
 }
 
