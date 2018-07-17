@@ -3,9 +3,11 @@ import get from 'lodash/get';
 import omit from 'lodash/omit';
 import isObject from 'lodash/isObject';
 import merge from 'lodash/merge';
-const assign = require('lodash/assign');
-const actoserviceContext = React.createContext();
-const { Provider, Consumer } = actoserviceContext;
+import assign from 'lodash/assign';
+import { getValue } from './utils/values';
+import { isInIframe } from './utils/iframe';
+import HoverComponent from './components/HoverComponent';
+import { Provider, Consumer } from './context';
 
 const actionIdentifier = '__ACTOSERVICE__ACTION__';
 
@@ -20,7 +22,7 @@ class Actoservice extends React.Component {
 
   componentDidMount() {
     const { scheme } = this.props;
-    if (this._isIframe()) {
+    if (isInIframe()) {
       this._registerListener();
     }
 
@@ -40,10 +42,6 @@ class Actoservice extends React.Component {
         .then((configMap) => this.setState({ configMap }))
         .catch(e => console.error('Cant find configMap'));
     }
-  }
-
-  _isIframe() {
-    return window.self !== window.top;
   }
 
   _isASAction(action) {
@@ -84,14 +82,6 @@ class Actoservice extends React.Component {
     );
   }
 }
-
-const getValue = (key) =>
-  ({ configMap }) =>
-    get(
-      get(configMap, key),
-      'defaultValue',
-      get(configMap, key)
-    );
 
 export function bind(key) {
   return (

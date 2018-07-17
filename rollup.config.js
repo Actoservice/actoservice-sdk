@@ -43,7 +43,7 @@ const external = [
 ];
 
 export default {
-	input: './index.js',
+	input: './src/index.js',
 	plugins,
 	external,
 	context: 'window',
