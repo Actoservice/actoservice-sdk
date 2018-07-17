@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { cloneElement } from 'react';
 
 import { isInIframe } from '../../utils/iframe';
 
@@ -7,12 +7,18 @@ class AbstractHoverComponent extends React.PureComponent {
     console.log('Hover');
   }
   render() {
-    if (isInIframe()) {
-      return React.Children.only(this.props.children);
+    const actoservice = this.props.actoservice;
+
+    const enhancedElement = cloneElement(this.props.children, {
+      actoservice
+    });
+
+    if (!isInIframe()) {
+      return enhancedElement;
     }
     return (
       <div onMouseOver={this.onMouseOver}>
-        {React.Children.only(this.props.children)}
+        {enhancedElement}
       </div>
     );
   }
