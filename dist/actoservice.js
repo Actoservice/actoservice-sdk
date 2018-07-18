@@ -4116,37 +4116,57 @@
 	}
 
 	function withBind(paths) {
-	  function BindASValue(Component) {
-	    return React__default.createElement(
-	      Consumer,
-	      null,
-	      function (_ref) {
-	        var configMap = _ref.configMap,
-	            isEditing = _ref.isEditing,
-	            updateConfig = _ref.updateConfig;
+	  return function (Component) {
+	    var WithASBind = function (_React$Component) {
+	      inherits(WithASBind, _React$Component);
 
-	        var scheme = {};
-	        paths.forEach(function (path) {
-	          set_1(scheme, path + '.value', getValue$1(path)({ configMap: configMap }));
-	          set_1(scheme, path + '.title', getTitle(path)({ configMap: configMap }));
-	          set_1(scheme, path + '.type', getType(path)({ configMap: configMap }));
-	        });
-	        return React__default.createElement(
-	          AbstractHoverComponent,
-	          {
-	            actoservice: {
-	              paths: paths,
-	              scheme: scheme,
-	              updateConfig: updateConfig,
-	              isEditing: isEditing
-	            }
-	          },
-	          React__default.createElement(Component, null)
-	        );
+	      function WithASBind() {
+	        classCallCheck(this, WithASBind);
+	        return possibleConstructorReturn(this, (WithASBind.__proto__ || Object.getPrototypeOf(WithASBind)).apply(this, arguments));
 	      }
-	    );
-	  }
-	  return BindASValue;
+
+	      createClass(WithASBind, [{
+	        key: 'render',
+	        value: function render() {
+	          var _this2 = this;
+
+	          return React__default.createElement(
+	            Consumer,
+	            null,
+	            function (_ref) {
+	              var configMap = _ref.configMap,
+	                  isEditing = _ref.isEditing,
+	                  updateConfig = _ref.updateConfig;
+
+	              var scheme = {};
+	              paths.forEach(function (path) {
+	                set_1(scheme, path + '.value', getValue$1(path)({ configMap: configMap }));
+	                set_1(scheme, path + '.title', getTitle(path)({ configMap: configMap }));
+	                set_1(scheme, path + '.type', getType(path)({ configMap: configMap }));
+	              });
+	              return React__default.createElement(
+	                AbstractHoverComponent,
+	                {
+	                  actoservice: {
+	                    paths: paths,
+	                    scheme: scheme,
+	                    updateConfig: updateConfig,
+	                    isEditing: isEditing
+	                  }
+	                },
+	                React__default.createElement(Component, _this2.props)
+	              );
+	            }
+	          );
+	        }
+	      }]);
+	      return WithASBind;
+	    }(React__default.Component);
+
+	    WithASBind.displayName = 'withBind [' + (Component.displayName || Component.name) + ']';
+
+	    return React__default.createElement(WithASBind, null);
+	  };
 	}
 
 	exports.default = Actoservice;

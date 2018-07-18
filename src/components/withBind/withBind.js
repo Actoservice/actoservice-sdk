@@ -10,31 +10,38 @@ import {
 } from '../../utils/values';
 
 export default function withBind(paths) {
-  function BindASValue(Component) {
-    return (
-      <Consumer>
-      {({ configMap, isEditing, updateConfig }) => {
-        const scheme = {};
-        paths.forEach((path) => {
-          set(scheme, `${path}.value`, getValue(path)({ configMap }));
-          set(scheme, `${path}.title`, getTitle(path)({ configMap }));
-          set(scheme, `${path}.type`, getType(path)({ configMap }));
-        });
+  return function(Component) {
+    class WithASBind extends React.Component {
+      render() {
         return (
-          <HoverComponent
-            actoservice={{
-              paths,
-              scheme,
-              updateConfig,
-              isEditing
-            }}
-          >
-            <Component />
-          </HoverComponent>
+          <Consumer>
+            {({ configMap, isEditing, updateConfig }) => {
+              const scheme = {};
+              paths.forEach((path) => {
+                set(scheme, `${path}.value`, getValue(path)({ configMap }));
+                set(scheme, `${path}.title`, getTitle(path)({ configMap }));
+                set(scheme, `${path}.type`, getType(path)({ configMap }));
+              });
+              return (
+                <HoverComponent
+                  actoservice={{
+                    paths,
+                    scheme,
+                    updateConfig,
+                    isEditing
+                  }}
+                >
+                <Component {...this.props} />
+              </HoverComponent>
+            );
+          }}
+          </Consumer>
         );
-      }}
-      </Consumer>
-    );
+      }
+    }
+
+    WithASBind.displayName = `withBind [${Component.displayName || Component.name}]`;
+
+    return <WithASBind />;
   }
-  return BindASValue;
 }
