@@ -4165,7 +4165,7 @@
 
 	    WithASBind.displayName = 'withBind [' + (Component.displayName || Component.name) + ']';
 
-	    return React__default.createElement(WithASBind, null);
+	    return WithASBind;
 	  };
 	}
 

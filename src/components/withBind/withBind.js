@@ -42,6 +42,6 @@ export default function withBind(paths) {
 
     WithASBind.displayName = `withBind [${Component.displayName || Component.name}]`;
 
-    return <WithASBind />;
+    return WithASBind;
   }
 }
