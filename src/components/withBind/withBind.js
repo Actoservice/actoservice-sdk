@@ -3,28 +3,34 @@ import HoverComponent from '../HoverComponent';
 import set from 'lodash/set';
 
 import { Consumer } from '../../context';
-import { getValue } from '../../utils/values';
+import {
+  getValue,
+  getType,
+  getTitle
+} from '../../utils/values';
 
-export default function withBind({ paths }) {
+export default function withBind(paths) {
   function BindASValue(Component) {
     return (
       <Consumer>
-      {({ configMap }) => {
-        const asProps = {};
-
+      {({ configMap, isEditing, updateConfig }) => {
+        const scheme = {};
         paths.forEach((path) => {
-          const val = getValue(path)({ configMap });
-          set(asProps, path, val);
+          set(scheme, `${path}.value`, getValue(path)({ configMap }));
+          set(scheme, `${path}.title`, getTitle(path)({ configMap }));
+          set(scheme, `${path}.type`, getType(path)({ configMap }));
         });
-
         return (
           <HoverComponent
             actoservice={{
-              values: asProps
+              paths,
+              scheme,
+              updateConfig,
+              isEditing
             }}
           >
-          <Component />
-        </HoverComponent>
+            <Component />
+          </HoverComponent>
         );
       }}
       </Consumer>

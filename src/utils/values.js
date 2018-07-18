@@ -7,3 +7,9 @@ export const getValue = (key) =>
     'defaultValue',
     get(configMap, key)
   );
+export const getType = (key) =>
+  ({ configMap }) =>
+    get(configMap, `${key}.type`);
+export const getTitle = (key) =>
+  ({ configMap }) =>
+    get(configMap, `${key}.__title__`);

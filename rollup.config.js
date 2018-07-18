@@ -13,7 +13,8 @@ const plugins = [
   commonjs({
     include: [
       'node_modules/react/**',
-      'node_modules/lodash/**'
+      'node_modules/lodash/**',
+      'node_modules/react-popover',
     ]
   }),
   resolve({
@@ -25,6 +26,7 @@ const plugins = [
   babel({
     babelrc: false,
     plugins: [
+      'transform-object-rest-spread',
       'external-helpers'
     ],
     presets: [
@@ -39,7 +41,7 @@ if (isProd) {
 }
 
 const external = [
-  "react"
+  'react',
 ];
 
 export default {

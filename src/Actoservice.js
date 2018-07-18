@@ -15,13 +15,18 @@ class Actoservice extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      configMap: window.__ACTOSERVICE__SCHEME__
+      configMap: window.__ACTOSERVICE__SCHEME__,
+      isEditing: true, //isInIframe()
     };
     window.__ACTOSERVICE__SCHEME__ = null;
+
+    this.updateConfig = this.updateConfig.bind(this);
   }
 
   componentDidMount() {
     const { scheme } = this.props;
+    this.injectCSS();
+
     if (isInIframe()) {
       this._registerListener();
     }
@@ -42,6 +47,58 @@ class Actoservice extends React.Component {
         .then((configMap) => this.setState({ configMap }))
         .catch(e => console.error('Cant find configMap'));
     }
+  }
+
+  injectCSS() {
+    const stylesheet = document.createElement('style');
+    stylesheet.innerHTML = `
+      .body {
+        padding: 0;
+        margin: 0;
+      }
+      .Popover-body {
+        display: inline-flex;
+        flex-direction: column;
+        padding: 2rem 4rem;
+        background: hsl(0, 0%, 27%);
+        color: white;
+        border-radius: 0.3rem;
+      }
+      
+      .Popover-tipShape {
+        fill: hsl(0, 0%, 27%);
+      }
+      .Target {
+        -webkit-user-select: none;
+        position: relative;
+        display: inline-block;
+        color: hsla(0, 0%, 0%, 0.45);
+        color: white;
+        white-space: pre-wrap;
+        text-align: center;
+        text-transform: uppercase;
+        border-radius: 0.2rem;
+        overflow: hidden;
+      }
+      
+      .Target-Move {
+        padding: 1rem;
+        cursor: move;
+        border-bottom: 1px solid white;
+        background: hsl(173, 69%, 48%);
+      }
+      
+      .Target-Toggle {
+        display: block;
+        padding: 1rem;
+        cursor: pointer;
+        background: hsl(346, 62%, 55%);
+      }
+      .Target.is-open .Target-Toggle {
+        background: hsl(346, 80%, 50%);
+      }
+    `;
+    document.head.appendChild(stylesheet);
   }
 
   _isASAction(action) {
@@ -71,11 +128,15 @@ class Actoservice extends React.Component {
   }
 
   render() {
-    const { configMap } = this.state;
+    const { configMap, isEditing } = this.state;
     const { children } = this.props;
     return (
       <Provider
-        value={{ configMap }}
+        value={{
+          configMap,
+          isEditing,
+          updateConfig: this.updateConfig
+        }}
       >
         {React.Children.only(children)}
       </Provider>

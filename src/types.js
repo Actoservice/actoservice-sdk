@@ -1,6 +1,11 @@
-export default {
-  string: "AS:string",
-  number: "AS:number",
-  color: "AS:color",
-  phone: "AS:phone"
-}
+export const ASString = 'AS:string';
+export const ASNumber = 'AS:number';
+export const ASColor = 'AS:color';
+export const ASPhone = 'AS:phone';
+
+export default [
+  ASString,
+  ASNumber,
+  ASColor,
+  ASPhone
+]
