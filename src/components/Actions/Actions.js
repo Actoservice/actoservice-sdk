@@ -11,37 +11,32 @@ import ASColorComponent from './AS-Color';
 
 const PropTypes = require('prop-types');
 
+const actionTypeComponent = {
+  [ASColor]: ASColorComponent,
+  [ASString]: ASStringComponent
+};
+
 class ASAction extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.renderActionType = this.renderActionType.bind(this);
     this.onChange = this.onChange.bind(this);
   }
   onChange(e) {
     this.props.onChange(this.props.path, e.target.value);
   }
-  renderActionType(type) {
+  render() {
+    const { type } = this.props;
     const passProps = {
       title: this.props.title,
       value: this.props.value,
       onChange: this.onChange
     };
-    switch(type) {
-      case ASString:
-        return (
-          <ASStringComponent {...passProps} />
-        );
-      case ASColor:
-        return (
-          <ASColorComponent {...passProps} />
-        );
-      default:
-        break;
+    const Component = actionTypeComponent[type];
+    if (!Component) {
+      throw new Error('Wrong action type');
     }
-  }
-  render() {
-    const { type } = this.props;
-    return this.renderActionType(type);
+
+    return <Component {...passProps} />
   }
 }
 

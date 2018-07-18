@@ -4,19 +4,26 @@ import omit from 'lodash/omit';
 import isObject from 'lodash/isObject';
 import merge from 'lodash/merge';
 import assign from 'lodash/assign';
+
 import { getValue } from './utils/values';
 import { isInIframe } from './utils/iframe';
 import HoverComponent from './components/HoverComponent';
 import { Provider, Consumer } from './context';
+import {
+  actionIdentifier,
+  changeEditing,
+  updateConfig,
+  notifyUpdates
+} from './ipc';
 
-const actionIdentifier = '__ACTOSERVICE__ACTION__';
+const PropTypes = require('prop-types');
 
 class Actoservice extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       configMap: window.__ACTOSERVICE__SCHEME__,
-      isEditing: true, //isInIframe()
+      isEditing: props.editing || isInIframe()
     };
     window.__ACTOSERVICE__SCHEME__ = null;
 
@@ -55,6 +62,9 @@ class Actoservice extends React.Component {
       .body {
         padding: 0;
         margin: 0;
+      }
+      .Popover {
+        z-index: 22;
       }
       .Popover-body {
         display: inline-flex;
@@ -102,16 +112,32 @@ class Actoservice extends React.Component {
   }
 
   _isASAction(action) {
-    return get(action, actionIdentifier);
+    const mAction = get(action, actionIdentifier);
+    if (!mAction) {
+      return false;
+    }
+    return [
+      changeEditing,
+      updateConfig,
+    ].includes(mAction);
   }
 
   _registerListener() {
     window.onmessage = ({ origin, data }) => {
       console.log('message received', origin, data);
-      if (this._isASAction(data)) {
-        this.updateConfig(get(data, 'payload'));
-      } else {
-        console.warn('invalid update');
+      if (!this._isASAction(data)) {
+        return; 
+      }
+      const type = get(data, actionIdentifier);
+      switch(type) {
+        case changeEditing:
+          this.setState({ editing: get(data, 'payload') });
+          break;
+        case updateConfig:
+          this.updateConfig(get(data, 'payload'));
+          break;
+        default:
+          console.warn('Wrong action received', data);
       }
     }
   }
@@ -124,6 +150,16 @@ class Actoservice extends React.Component {
 
     this.setState({
       configMap: newConfig
+    }, () => {
+      if (parent in window) {
+        parent.postMessage({
+          [actionIdentifier]: notifyUpdates,
+          payload: {
+            updates: configuration,
+            result: this.state.configMap
+          }
+        });
+      }
     });
   }
 
@@ -143,6 +179,11 @@ class Actoservice extends React.Component {
     );
   }
 }
+
+Actoservice.propTypes = {
+  editing: PropTypes.bool,
+  scheme: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired
+};
 
 export function bind(key) {
   return (

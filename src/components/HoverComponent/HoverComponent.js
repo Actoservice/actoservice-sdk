@@ -11,9 +11,8 @@ const Popover = require('react-popover');
 class AbstractHoverComponent extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      openAction: false
-    };
+    this.state = { openAction: false };
+
     this.openAction = this.openAction.bind(this);
     this.closeActions = this.closeActions.bind(this);
     this.generateComponentAction = this.generateComponentAction.bind(this);
