@@ -33,7 +33,7 @@ class AbstractHoverComponent extends React.PureComponent {
     const updates = {};
     set(
       updates,
-      `${path}.defaultValue`,
+      `${path}.value`,
       value
     );
 
