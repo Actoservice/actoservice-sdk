@@ -158,7 +158,7 @@ class Actoservice extends React.Component {
             updates: configuration,
             result: this.state.configMap
           }
-        });
+        }, '*');
       }
     });
   }
