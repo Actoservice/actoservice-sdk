@@ -151,7 +151,7 @@ class Actoservice extends React.Component {
     this.setState({
       configMap: newConfig
     }, () => {
-      if (parent in window) {
+      if ('parent' in window) {
         parent.postMessage({
           [actionIdentifier]: notifyUpdates,
           payload: {
