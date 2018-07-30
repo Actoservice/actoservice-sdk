@@ -60,6 +60,7 @@ class AbstractWrapper extends React.PureComponent {
   }
 
   render() {
+    const { classes } = this.props;
     const actoservice = this.props.actoservice;
 
     const enhancedElement = cloneElement(this.props.children, {
@@ -74,7 +75,7 @@ class AbstractWrapper extends React.PureComponent {
 
     return (
       <div
-        className={'as-action-cntr'}
+        className={`as-action-cntr ${get(classes, 'container', '')}`}
         onMouseOver={this.openAction}
         style={{
           display: 'inline-block',
@@ -86,7 +87,7 @@ class AbstractWrapper extends React.PureComponent {
         }}
       >
         <div
-          className={'as-action-hint'}
+          className={`as-action-hint ${get(classes, 'hint', '')}`}
           style={{
             position: 'absolute',
             top:  -hintSize / 2,
@@ -106,15 +107,17 @@ class AbstractWrapper extends React.PureComponent {
           body={this.generateComponentAction()}
           onOuterAction={this.closeActions}
         >
-          <div>
-            {enhancedElement}
-          </div>
+          {enhancedElement}
         </Popover>
       </div>
     );
   }
 }
 AbstractWrapper.propTypes = {
+  classes: {
+    container: PropTypes.string,
+    hint: PropTypes.string
+  },
   actoservice: PropTypes.shape({
     paths: PropTypes.arrayOf(PropTypes.string).isRequired,
     schemes: PropTypes.object,

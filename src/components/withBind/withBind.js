@@ -24,6 +24,7 @@ export default function withBind(paths) {
               });
               return (
                 <AbstractWrapper
+                  classes={this.props.classes}
                   actoservice={{
                     paths,
                     scheme,
