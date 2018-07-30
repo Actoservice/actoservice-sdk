@@ -8,7 +8,9 @@ import types from '../../types';
 const PropTypes = require('prop-types');
 const Popover = require('react-popover');
 
-class AbstractHoverComponent extends React.PureComponent {
+const hintSize = 20;
+
+class AbstractWrapper extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = { openAction: false };
@@ -72,10 +74,34 @@ class AbstractHoverComponent extends React.PureComponent {
 
     return (
       <div
-        onContextMenu={this.openAction}
-        style={{ display: 'inline-block' }}
+        className={'as-action-cntr'}
+        onMouseOver={this.openAction}
+        style={{
+          display: 'inline-block',
+          position: 'relative',
+          transition: '200ms box-shadow',
+          boxShadow: this.state.openAction
+            ? '2px 2px 36px -1px rgba(0,0,0,0.75)'
+            : 'none'
+        }}
       >
+        <div
+          className={'as-action-hint'}
+          style={{
+            position: 'absolute',
+            top:  -hintSize / 2,
+            right: -hintSize / 2,
+            width: hintSize,
+            height: hintSize,
+            borderRadius: hintSize / 2,
+            backgroundColor: '#0a6c8f',
+            opacity: this.state.openAction ? 0 : 1,
+            transition: '200ms opacity',
+            boxShadow: '2px 2px 36px -1px rgba(0,0,0,0.75)'
+          }}
+        />
         <Popover
+          preferPlace={'below'}
           isOpen={this.state.openAction}
           body={this.generateComponentAction()}
           onOuterAction={this.closeActions}
@@ -88,7 +114,7 @@ class AbstractHoverComponent extends React.PureComponent {
     );
   }
 }
-AbstractHoverComponent.propTypes = {
+AbstractWrapper.propTypes = {
   actoservice: PropTypes.shape({
     paths: PropTypes.arrayOf(PropTypes.string).isRequired,
     schemes: PropTypes.object,
@@ -96,4 +122,4 @@ AbstractHoverComponent.propTypes = {
     isEditing: PropTypes.bool.isRequired
   }).isRequired,
 };
-export default AbstractHoverComponent;
+export default AbstractWrapper;

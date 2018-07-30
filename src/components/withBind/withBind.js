@@ -1,5 +1,5 @@
 import React from 'react';
-import HoverComponent from '../HoverComponent';
+import AbstractWrapper from '../AbstractWrapper';
 import set from 'lodash/set';
 
 import { Consumer } from '../../context';
@@ -23,7 +23,7 @@ export default function withBind(paths) {
                 set(scheme, `${path}.type`, getType(path)({ configMap }));
               });
               return (
-                <HoverComponent
+                <AbstractWrapper
                   actoservice={{
                     paths,
                     scheme,
@@ -32,7 +32,7 @@ export default function withBind(paths) {
                   }}
                 >
                 <Component {...this.props} />
-              </HoverComponent>
+              </AbstractWrapper>
             );
           }}
           </Consumer>

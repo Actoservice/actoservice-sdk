@@ -3,17 +3,20 @@ import types, {
   ASColor,
   ASNumber,
   ASPhone,
-  ASString
+  ASString,
+  ASImage
 } from '../../types';
 
 import ASStringComponent from './AS-String';
 import ASColorComponent from './AS-Color';
+import ASImageComponent from './AS-Image';
 
 const PropTypes = require('prop-types');
 
 const actionTypeComponent = {
   [ASColor]: ASColorComponent,
-  [ASString]: ASStringComponent
+  [ASString]: ASStringComponent,
+  [ASImage]: ASImageComponent
 };
 
 class ASAction extends React.PureComponent {
@@ -33,7 +36,7 @@ class ASAction extends React.PureComponent {
     };
     const Component = actionTypeComponent[type];
     if (!Component) {
-      throw new Error('Wrong action type');
+      throw new Error(`Wrong action type: ${type}`);
     }
 
     return <Component {...passProps} />

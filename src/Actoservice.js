@@ -5,9 +5,10 @@ import isObject from 'lodash/isObject';
 import merge from 'lodash/merge';
 import assign from 'lodash/assign';
 
+import externalCSS from './externalCSS';
 import { getValue } from './utils/values';
 import { isInIframe } from './utils/iframe';
-import HoverComponent from './components/HoverComponent';
+
 import { Provider, Consumer } from './context';
 import {
   actionIdentifier,
@@ -58,56 +59,7 @@ class Actoservice extends React.Component {
 
   injectCSS() {
     const stylesheet = document.createElement('style');
-    stylesheet.innerHTML = `
-      .body {
-        padding: 0;
-        margin: 0;
-      }
-      .Popover {
-        z-index: 22;
-      }
-      .Popover-body {
-        display: inline-flex;
-        flex-direction: column;
-        padding: 2rem 4rem;
-        background: hsl(0, 0%, 27%);
-        color: white;
-        border-radius: 0.3rem;
-      }
-      
-      .Popover-tipShape {
-        fill: hsl(0, 0%, 27%);
-      }
-      .Target {
-        -webkit-user-select: none;
-        position: relative;
-        display: inline-block;
-        color: hsla(0, 0%, 0%, 0.45);
-        color: white;
-        white-space: pre-wrap;
-        text-align: center;
-        text-transform: uppercase;
-        border-radius: 0.2rem;
-        overflow: hidden;
-      }
-      
-      .Target-Move {
-        padding: 1rem;
-        cursor: move;
-        border-bottom: 1px solid white;
-        background: hsl(173, 69%, 48%);
-      }
-      
-      .Target-Toggle {
-        display: block;
-        padding: 1rem;
-        cursor: pointer;
-        background: hsl(346, 62%, 55%);
-      }
-      .Target.is-open .Target-Toggle {
-        background: hsl(346, 80%, 50%);
-      }
-    `;
+    stylesheet.innerHTML = externalCSS;
     document.head.appendChild(stylesheet);
   }
 
