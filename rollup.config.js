@@ -25,6 +25,7 @@ const plugins = [
   }),
   babel({
     babelrc: false,
+    exclude: 'node_modules/**',
     plugins: [
       'transform-object-rest-spread',
       'external-helpers'
