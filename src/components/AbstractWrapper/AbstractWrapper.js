@@ -1,6 +1,7 @@
 import React, { cloneElement } from 'react';
 import set from 'lodash/set';
 import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
 import { isInIframe } from '../../utils/iframe';
 import { Actions } from '../Actions';
 import types from '../../types';
@@ -23,6 +24,15 @@ class AbstractWrapper extends React.PureComponent {
 
   openAction(e) {
     e.preventDefault();
+
+    if (!isEmpty(AbstractWrapper.lastOpenPopover) && AbstractWrapper.lastOpenPopover !== this) {
+      AbstractWrapper
+        .lastOpenPopover
+        .closeActions();
+    }
+
+    AbstractWrapper.lastOpenPopover = this;
+
     this.setState({ openAction: true });
   }
 
@@ -78,7 +88,6 @@ class AbstractWrapper extends React.PureComponent {
         className={`as-action-cntr ${get(classes, 'container', '')}`}
         onMouseOver={this.openAction}
         style={{
-          display: 'inline-block',
           position: 'relative',
           transition: '200ms box-shadow',
           boxShadow: this.state.openAction
@@ -106,6 +115,7 @@ class AbstractWrapper extends React.PureComponent {
           isOpen={this.state.openAction}
           body={this.generateComponentAction()}
           onOuterAction={this.closeActions}
+          enterExitTransitionDurationMs={100}
         >
           {enhancedElement}
         </Popover>
@@ -113,11 +123,13 @@ class AbstractWrapper extends React.PureComponent {
     );
   }
 }
+AbstractWrapper.lastOpenPopover = null;
+
 AbstractWrapper.propTypes = {
-  classes: {
+  classes: PropTypes.shape({
     container: PropTypes.string,
     hint: PropTypes.string
-  },
+  }),
   actoservice: PropTypes.shape({
     paths: PropTypes.arrayOf(PropTypes.string).isRequired,
     schemes: PropTypes.object,

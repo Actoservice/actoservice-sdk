@@ -29,6 +29,7 @@ export default `
     margin: 0;
   }
   .as-action-hint {
+    z-index: 9999;
     animation: pulse 2s infinite;
   }
   .Popover {

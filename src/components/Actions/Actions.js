@@ -10,13 +10,17 @@ import types, {
 import ASStringComponent from './AS-String';
 import ASColorComponent from './AS-Color';
 import ASImageComponent from './AS-Image';
+import ASNumberComponent from './AS-Number';
+import ASPhoneComponent from './AS-Phone';
 
 const PropTypes = require('prop-types');
 
 const actionTypeComponent = {
   [ASColor]: ASColorComponent,
   [ASString]: ASStringComponent,
-  [ASImage]: ASImageComponent
+  [ASImage]: ASImageComponent,
+  [ASNumber]: ASNumberComponent,
+  [ASPhone]: ASPhoneComponent
 };
 
 class ASAction extends React.PureComponent {
