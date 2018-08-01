@@ -4,10 +4,18 @@ export const ASColor = 'AS:color';
 export const ASPhone = 'AS:phone';
 export const ASImage = 'AS:image';
 
+export const ASArrayImage = 'AS:array:image';
+export const ASArrayString = 'AS:array:string';
+export const ASArrayNumber = 'AS:array:number';
+
 export default [
   ASString,
   ASNumber,
   ASColor,
   ASPhone,
-  ASImage
+  ASImage,
+
+  ASArrayImage,
+  ASArrayString,
+  ASArrayNumber,
 ]

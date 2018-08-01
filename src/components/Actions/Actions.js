@@ -4,7 +4,11 @@ import types, {
   ASNumber,
   ASPhone,
   ASString,
-  ASImage
+  ASImage,
+
+  ASArrayImage,
+  ASArrayNumber,
+  ASArrayString
 } from '../../types';
 
 import ASStringComponent from './AS-String';
@@ -16,11 +20,24 @@ import ASPhoneComponent from './AS-Phone';
 const PropTypes = require('prop-types');
 
 const actionTypeComponent = {
-  [ASColor]: ASColorComponent,
-  [ASString]: ASStringComponent,
-  [ASImage]: ASImageComponent,
-  [ASNumber]: ASNumberComponent,
-  [ASPhone]: ASPhoneComponent
+  [ASColor]: { component: ASColorComponent },
+  [ASString]: { component: ASStringComponent },
+  [ASImage]: { component: ASImageComponent },
+  [ASNumber]: { component: ASNumberComponent },
+  [ASPhone]: { component: ASPhoneComponent },
+
+  [ASArrayImage]: {
+    component: ASImageComponent,
+    props: { array: true }
+  },
+  [ASArrayNumber]: {
+    component: ASNumberComponent,
+    props: { array: true }
+  },
+  [ASArrayString]: {
+    component: ASStringComponent,
+    props: { array: true }
+  }
 };
 
 class ASAction extends React.PureComponent {
@@ -38,10 +55,14 @@ class ASAction extends React.PureComponent {
       value: this.props.value,
       onChange: this.onChange
     };
-    const Component = actionTypeComponent[type];
-    if (!Component) {
+    const renderObject = actionTypeComponent[type];
+    if (!renderObject) {
       throw new Error(`Wrong action type: ${type}`);
     }
+
+    const { props, component: Component } = renderObject;
+
+    Object.assign(passProps, props);
 
     return <Component {...passProps} />
   }

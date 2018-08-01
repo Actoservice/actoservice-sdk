@@ -4,28 +4,30 @@ import {
   prodValueKey,
   titleKey,
   prodTitleKey,
-  typeKey
+  typeKey,
+  maxKey,
+  minKey
 } from '../constants';
 
-console.log(
-  valueKey,
-  prodValueKey,
-  titleKey,
-  prodTitleKey,
-  typeKey
-);
-
 export const getValue = (key) =>
-({ configMap }) =>
-  get(
-    get(configMap, key),
-    prodValueKey,
-    get(configMap, `${key}.${valueKey}`)
-  );
+  ({ configMap }) =>
+    get(
+      get(configMap, key),
+      prodValueKey,
+      get(configMap, `${key}.${valueKey}`)
+    );
 
 export const getType = (key) =>
   ({ configMap }) =>
     get(configMap, `${key}.${typeKey}`);
+
+export const getMax = (key) =>
+  ({ configMap }) =>
+    get(configMap, `${key}.${maxKey}`);
+
+export const getMin = (key) =>
+  ({ configMap }) =>
+    get(configMap, `${key}.${minKey}`);
 
 export const getTitle = (key) =>
   ({ configMap }) =>

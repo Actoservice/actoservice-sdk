@@ -6,7 +6,9 @@ import { Consumer } from '../../context';
 import {
   getValue,
   getType,
-  getTitle
+  getTitle,
+  getMax,
+  getMin
 } from '../../utils/values';
 
 export default function withBind(paths) {
@@ -21,6 +23,8 @@ export default function withBind(paths) {
                 set(scheme, `${path}.value`, getValue(path)({ configMap }));
                 set(scheme, `${path}.title`, getTitle(path)({ configMap }));
                 set(scheme, `${path}.type`, getType(path)({ configMap }));
+                set(scheme, `${path}.max`, getMax(path)({ configMap }));
+                set(scheme, `${path}.min`, getMin(path)({ configMap }));
               });
               return (
                 <AbstractWrapper

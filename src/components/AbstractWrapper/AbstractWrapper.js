@@ -3,6 +3,13 @@ import set from 'lodash/set';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { isInIframe } from '../../utils/iframe';
+import {
+  getTitle,
+  getMax,
+  getMin,
+  getType,
+  getValue
+} from '../../utils/values';
 import { Actions } from '../Actions';
 import types from '../../types';
 
@@ -49,7 +56,6 @@ class AbstractWrapper extends React.PureComponent {
       value
     );
 
-    console.log(updates);
     this.props.actoservice
       .updateConfig(updates);
   }
@@ -61,17 +67,19 @@ class AbstractWrapper extends React.PureComponent {
       <Actions
         key={path}
         path={path}
-        title={get(scheme, `${path}.title`)}
+        max={getMax(path)({ configMap: scheme })}
+        min={getMin(path)({ configMap: scheme })}
+        title={getTitle(path)({ configMap: scheme })}
         onChange={this.handleChange}
-        type={get(scheme, `${path}.type`)}
-        value={get(scheme, `${path}.value`)}
+        type={getType(path)({ configMap: scheme })}
+        value={getValue(path)({ configMap: scheme })}
       />
     ));
   }
 
   render() {
     const { classes } = this.props;
-    const actoservice = this.props.actoservice;
+    const { actoservice } = this.props;
 
     const enhancedElement = cloneElement(this.props.children, {
       actoservice: {
@@ -117,12 +125,15 @@ class AbstractWrapper extends React.PureComponent {
           onOuterAction={this.closeActions}
           enterExitTransitionDurationMs={100}
         >
-          {enhancedElement}
+          <div>
+            {enhancedElement}
+          </div>
         </Popover>
       </div>
     );
   }
 }
+
 AbstractWrapper.lastOpenPopover = null;
 
 AbstractWrapper.propTypes = {

@@ -3,6 +3,7 @@ import get from 'lodash/get';
 import omit from 'lodash/omit';
 import isObject from 'lodash/isObject';
 import merge from 'lodash/merge';
+import mergeWith from 'lodash/mergeWith';
 import assign from 'lodash/assign';
 
 import externalCSS from './externalCSS';
@@ -95,9 +96,11 @@ class Actoservice extends React.Component {
   }
 
   updateConfig(configuration) {
-    const newConfig = merge(
+    const newConfig = mergeWith(
       this.state.configMap,
       configuration,
+      (objVal, sourceVal) =>
+        Array.isArray(sourceVal) ? sourceVal : void(0)
     );
 
     this.setState({

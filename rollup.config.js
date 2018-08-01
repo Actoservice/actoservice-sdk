@@ -2,6 +2,7 @@ import babel from 'rollup-plugin-babel';
 import babelrc from 'babelrc-rollup';
 import { uglify } from 'rollup-plugin-uglify';
 import resolve from 'rollup-plugin-node-resolve';
+import image from 'rollup-plugin-image';
 import commonjs from 'rollup-plugin-commonjs';
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -10,6 +11,7 @@ const pkg = require('./package.json');
 const babelrcConfig = babelrc({ addModuleOptions: false });
 
 const plugins = [
+  image(),
   commonjs({
     include: [
       'node_modules/react/**',
