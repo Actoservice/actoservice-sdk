@@ -125,7 +125,7 @@ class AbstractWrapper extends React.PureComponent {
           onOuterAction={this.closeActions}
           enterExitTransitionDurationMs={100}
         >
-          <div>
+          <div className={get(classes, 'innerContainer', '')}>
             {enhancedElement}
           </div>
         </Popover>
