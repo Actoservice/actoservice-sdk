@@ -3,6 +3,7 @@ export const ASNumber = 'AS:number';
 export const ASColor = 'AS:color';
 export const ASPhone = 'AS:phone';
 export const ASImage = 'AS:image';
+export const ASBool = 'AS:bool';
 
 export const ASArrayImage = 'AS:array:image';
 export const ASArrayString = 'AS:array:string';
@@ -14,6 +15,7 @@ export default [
   ASColor,
   ASPhone,
   ASImage,
+  ASBool,
 
   ASArrayImage,
   ASArrayString,

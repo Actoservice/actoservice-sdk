@@ -5,6 +5,7 @@ import types, {
   ASPhone,
   ASString,
   ASImage,
+  ASBool,
 
   ASArrayImage,
   ASArrayNumber,
@@ -16,6 +17,7 @@ import ASColorComponent from './AS-Color';
 import ASImageComponent from './AS-Image';
 import ASNumberComponent from './AS-Number';
 import ASPhoneComponent from './AS-Phone';
+import ASBoolComponent from './AS-Bool';
 
 const PropTypes = require('prop-types');
 
@@ -25,6 +27,7 @@ const actionTypeComponent = {
   [ASImage]: { component: ASImageComponent },
   [ASNumber]: { component: ASNumberComponent },
   [ASPhone]: { component: ASPhoneComponent },
+  [ASBool]: { component: ASBoolComponent },
 
   [ASArrayImage]: {
     component: ASImageComponent,
@@ -46,6 +49,7 @@ class ASAction extends React.PureComponent {
     this.onChange = this.onChange.bind(this);
   }
   onChange(e) {
+    console.log(e.target.value);
     this.props.onChange(this.props.path, e.target.value);
   }
   render() {

@@ -1,6 +1,7 @@
 import React from 'react';
 import AbstractWrapper from '../AbstractWrapper';
 import set from 'lodash/set';
+import uniq from 'lodash/uniq';
 
 import { Consumer } from '../../context';
 import {
@@ -13,6 +14,15 @@ import {
 
 export default function withBind(paths) {
   return function(Component) {
+    const name = Component.displayName || Component.name || 'Unknown';
+
+    if (paths.length !== uniq(paths).length) {
+      console.warn(`
+        You're trying to get Actoservice value multiple times,
+        Please restructure this to get it once in component: ${name}
+      `);
+    }
+
     class WithASBind extends React.Component {
       render() {
         return (
@@ -46,7 +56,7 @@ export default function withBind(paths) {
       }
     }
 
-    WithASBind.displayName = `withBind [${Component.displayName || Component.name}]`;
+    WithASBind.displayName = `withBind [${name}]`;
 
     return WithASBind;
   }
