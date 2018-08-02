@@ -78,7 +78,7 @@ class AbstractWrapper extends React.PureComponent {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, wrapper } = this.props;
     const { actoservice } = this.props;
 
     const enhancedElement = cloneElement(this.props.children, {
@@ -90,6 +90,11 @@ class AbstractWrapper extends React.PureComponent {
     if (!actoservice.isEditing) {
       return enhancedElement;
     }
+
+    const WComponent = wrapper
+      ? <div className={get(classes, 'innerContainer', '')}>{enhancedElement}</div>
+      : enhancedElement;
+
 
     return (
       <div
@@ -125,9 +130,7 @@ class AbstractWrapper extends React.PureComponent {
           onOuterAction={this.closeActions}
           enterExitTransitionDurationMs={100}
         >
-          <div className={get(classes, 'innerContainer', '')}>
-            {enhancedElement}
-          </div>
+          {WComponent}
         </Popover>
       </div>
     );
@@ -137,6 +140,7 @@ class AbstractWrapper extends React.PureComponent {
 AbstractWrapper.lastOpenPopover = null;
 
 AbstractWrapper.propTypes = {
+  wrapper: PropTypes.bool,
   classes: PropTypes.shape({
     container: PropTypes.string,
     hint: PropTypes.string
