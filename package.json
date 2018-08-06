@@ -12,10 +12,6 @@
     "react-popover": "0.5.7",
     "request": "2.87.0"
   },
-  "files": [
-    "ipc.js",
-    "types.js"
-  ],
   "devDependencies": {
     "babel-cli": "6.26.0",
     "babel-plugin-external-helpers": "6.22.0",
