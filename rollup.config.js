@@ -4,6 +4,7 @@ import { uglify } from 'rollup-plugin-uglify';
 import resolve from 'rollup-plugin-node-resolve';
 import image from 'rollup-plugin-image';
 import commonjs from 'rollup-plugin-commonjs';
+import replace from 'rollup-plugin-replace';
 import { defineEnvPlugin } from './rollup.plugins';
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -38,8 +39,8 @@ const plugins = [
       'react'
     ],
   }),
-  defineEnvPlugin({
-    __DEV__: process.env.NODE_ENV !== 'production'
+  replace({
+    __DEV__: !isProd
   })
 ];
 

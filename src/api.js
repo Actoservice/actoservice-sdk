@@ -10,6 +10,7 @@ class ActoserviceApi {
   }
 
   uploadThemeResource(name, resource) {
+    console.log(isProd);
     if (!isProd) {
       return new Promise(resolve => {
         const reader = new FileReader();
