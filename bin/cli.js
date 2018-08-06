@@ -28,6 +28,7 @@ const rootRelativeConfigMap = path.join(process.cwd(), config.configMap);
 let preData = {
   name: config.name,
   description: config.description,
+  version: config.version,
   source: fs.createReadStream(rootRelativeEntry),
   configMap: fs.createReadStream(rootRelativeConfigMap)
 }
@@ -59,10 +60,16 @@ if (config.assets && fs.lstatSync(config.assets).isDirectory()) {
 
 const HOST = 'http://0.0.0.0:3000/api/v1/themes';
 
-upload(preData);
+upload(preData, { apiKey: config.apiKey });
 
-function upload(data) {
-  request.post({ url: HOST, formData: data }, (err, res, body) => {
+function upload(data, { apiKey }) {
+  const headers = {
+    'X-API-Key': apiKey
+  };
+  if (!apiKey) {
+    throw new Error('API key is required to upload theme');
+  }
+  request.post({ url: HOST, formData: data }, { headers }, (err, res, body) => {
     if (err) {
       return console.error('upload failed', err);
     }
