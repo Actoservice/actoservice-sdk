@@ -3,11 +3,15 @@ import get from 'lodash/get';
 import omit from 'lodash/omit';
 import isObject from 'lodash/isObject';
 import merge from 'lodash/merge';
+import mergeWith from 'lodash/mergeWith';
 import assign from 'lodash/assign';
+import includes from 'lodash/includes';
 
-import { getValue } from './utils/values';
+import externalCSS from './externalCSS';
+import { getValue, getType } from './utils/values';
 import { isInIframe } from './utils/iframe';
-import HoverComponent from './components/HoverComponent';
+import keyfiy from './utils/keyify';
+
 import { Provider, Consumer } from './context';
 import {
   actionIdentifier,
@@ -17,6 +21,8 @@ import {
 } from './ipc';
 
 const PropTypes = require('prop-types');
+
+const base64Regexp = /^(data:\w+\/[a-zA-Z\+\-\.]+;base64,)?(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/gi;
 
 class Actoservice extends React.Component {
   constructor(props) {
@@ -58,56 +64,7 @@ class Actoservice extends React.Component {
 
   injectCSS() {
     const stylesheet = document.createElement('style');
-    stylesheet.innerHTML = `
-      .body {
-        padding: 0;
-        margin: 0;
-      }
-      .Popover {
-        z-index: 22;
-      }
-      .Popover-body {
-        display: inline-flex;
-        flex-direction: column;
-        padding: 2rem 4rem;
-        background: hsl(0, 0%, 27%);
-        color: white;
-        border-radius: 0.3rem;
-      }
-      
-      .Popover-tipShape {
-        fill: hsl(0, 0%, 27%);
-      }
-      .Target {
-        -webkit-user-select: none;
-        position: relative;
-        display: inline-block;
-        color: hsla(0, 0%, 0%, 0.45);
-        color: white;
-        white-space: pre-wrap;
-        text-align: center;
-        text-transform: uppercase;
-        border-radius: 0.2rem;
-        overflow: hidden;
-      }
-      
-      .Target-Move {
-        padding: 1rem;
-        cursor: move;
-        border-bottom: 1px solid white;
-        background: hsl(173, 69%, 48%);
-      }
-      
-      .Target-Toggle {
-        display: block;
-        padding: 1rem;
-        cursor: pointer;
-        background: hsl(346, 62%, 55%);
-      }
-      .Target.is-open .Target-Toggle {
-        background: hsl(346, 80%, 50%);
-      }
-    `;
+    stylesheet.innerHTML = externalCSS;
     document.head.appendChild(stylesheet);
   }
 
@@ -143,9 +100,11 @@ class Actoservice extends React.Component {
   }
 
   updateConfig(configuration) {
-    const newConfig = merge(
+    const newConfig = mergeWith(
       this.state.configMap,
       configuration,
+      (objVal, sourceVal) =>
+        Array.isArray(sourceVal) ? sourceVal : void(0)
     );
 
     this.setState({
@@ -171,6 +130,7 @@ class Actoservice extends React.Component {
         value={{
           configMap,
           isEditing,
+          apiKey: this.props.apiKey,
           updateConfig: this.updateConfig
         }}
       >
@@ -182,6 +142,7 @@ class Actoservice extends React.Component {
 
 Actoservice.propTypes = {
   editing: PropTypes.bool,
+  apiKey: PropTypes.string,
   scheme: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired
 };
 

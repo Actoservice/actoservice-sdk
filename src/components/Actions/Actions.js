@@ -3,17 +3,44 @@ import types, {
   ASColor,
   ASNumber,
   ASPhone,
-  ASString
+  ASString,
+  ASImage,
+  ASBool,
+
+  ASArrayImage,
+  ASArrayNumber,
+  ASArrayString
 } from '../../types';
 
 import ASStringComponent from './AS-String';
 import ASColorComponent from './AS-Color';
+import ASImageComponent from './AS-Image';
+import ASNumberComponent from './AS-Number';
+import ASPhoneComponent from './AS-Phone';
+import ASBoolComponent from './AS-Bool';
 
 const PropTypes = require('prop-types');
 
 const actionTypeComponent = {
-  [ASColor]: ASColorComponent,
-  [ASString]: ASStringComponent
+  [ASColor]: { component: ASColorComponent },
+  [ASString]: { component: ASStringComponent },
+  [ASImage]: { component: ASImageComponent },
+  [ASNumber]: { component: ASNumberComponent },
+  [ASPhone]: { component: ASPhoneComponent },
+  [ASBool]: { component: ASBoolComponent },
+
+  [ASArrayImage]: {
+    component: ASImageComponent,
+    props: { array: true }
+  },
+  [ASArrayNumber]: {
+    component: ASNumberComponent,
+    props: { array: true }
+  },
+  [ASArrayString]: {
+    component: ASStringComponent,
+    props: { array: true }
+  }
 };
 
 class ASAction extends React.PureComponent {
@@ -29,12 +56,18 @@ class ASAction extends React.PureComponent {
     const passProps = {
       title: this.props.title,
       value: this.props.value,
-      onChange: this.onChange
+      onChange: this.onChange,
+      path: this.props.path,
+      apiKey: this.props.apiKey
     };
-    const Component = actionTypeComponent[type];
-    if (!Component) {
-      throw new Error('Wrong action type');
+    const renderObject = actionTypeComponent[type];
+    if (!renderObject) {
+      throw new Error(`Wrong action type: ${type}`);
     }
+
+    const { props, component: Component } = renderObject;
+
+    Object.assign(passProps, props);
 
     return <Component {...passProps} />
   }
@@ -45,6 +78,7 @@ ASAction.propTypes = {
   type: PropTypes.oneOf(types),
   value: PropTypes.any,
   title: PropTypes.string,
+  apiKey: PropTypes.string,
   onChange: PropTypes.func.isRequired
 };
 

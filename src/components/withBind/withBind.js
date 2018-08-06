@@ -1,29 +1,46 @@
 import React from 'react';
-import HoverComponent from '../HoverComponent';
+import AbstractWrapper from '../AbstractWrapper';
 import set from 'lodash/set';
+import uniq from 'lodash/uniq';
 
 import { Consumer } from '../../context';
 import {
   getValue,
   getType,
-  getTitle
+  getTitle,
+  getMax,
+  getMin
 } from '../../utils/values';
 
 export default function withBind(paths) {
   return function(Component) {
+    const name = Component.displayName || Component.name || 'Unknown';
+
+    if (paths.length !== uniq(paths).length) {
+      console.warn(`
+        You're trying to get Actoservice value multiple times,
+        Please restructure this to get it once in component: ${name}
+      `);
+    }
+
     class WithASBind extends React.Component {
       render() {
         return (
           <Consumer>
-            {({ configMap, isEditing, updateConfig }) => {
+            {({ configMap, isEditing, updateConfig, apiKey }) => {
               const scheme = {};
               paths.forEach((path) => {
                 set(scheme, `${path}.value`, getValue(path)({ configMap }));
                 set(scheme, `${path}.title`, getTitle(path)({ configMap }));
                 set(scheme, `${path}.type`, getType(path)({ configMap }));
+                set(scheme, `${path}.max`, getMax(path)({ configMap }));
+                set(scheme, `${path}.min`, getMin(path)({ configMap }));
               });
               return (
-                <HoverComponent
+                <AbstractWrapper
+                  classes={this.props.classes}
+                  wrapper={this.props.wrapper}
+                  apiKey={apiKey}
                   actoservice={{
                     paths,
                     scheme,
@@ -32,7 +49,7 @@ export default function withBind(paths) {
                   }}
                 >
                 <Component {...this.props} />
-              </HoverComponent>
+              </AbstractWrapper>
             );
           }}
           </Consumer>
@@ -40,7 +57,7 @@ export default function withBind(paths) {
       }
     }
 
-    WithASBind.displayName = `withBind [${Component.displayName || Component.name}]`;
+    WithASBind.displayName = `withBind [${name}]`;
 
     return WithASBind;
   }

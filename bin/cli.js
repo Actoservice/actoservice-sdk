@@ -15,6 +15,7 @@ if (!packageJson) {
 const defaultConfig = {
   entry: './index.js',
   name: packageJson.name,
+  version: packageJson.version,
   configMap: './actoservice.json',
   description: packageJson.description
 }
