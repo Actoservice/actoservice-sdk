@@ -33,7 +33,7 @@ class ASBool extends React.Component {
 
 ASBool.propTypes = {
   title: PropTypes.string,
-  value: PropTypes.string,
+  value: PropTypes.bool,
   onChange: PropTypes.func.isRequired
 };
 

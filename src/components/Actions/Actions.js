@@ -49,7 +49,6 @@ class ASAction extends React.PureComponent {
     this.onChange = this.onChange.bind(this);
   }
   onChange(e) {
-    console.log(e.target.value);
     this.props.onChange(this.props.path, e.target.value);
   }
   render() {
@@ -57,7 +56,9 @@ class ASAction extends React.PureComponent {
     const passProps = {
       title: this.props.title,
       value: this.props.value,
-      onChange: this.onChange
+      onChange: this.onChange,
+      path: this.props.path,
+      apiKey: this.props.apiKey
     };
     const renderObject = actionTypeComponent[type];
     if (!renderObject) {
@@ -77,6 +78,7 @@ ASAction.propTypes = {
   type: PropTypes.oneOf(types),
   value: PropTypes.any,
   title: PropTypes.string,
+  apiKey: PropTypes.string,
   onChange: PropTypes.func.isRequired
 };
 

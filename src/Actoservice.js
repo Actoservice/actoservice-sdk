@@ -5,10 +5,12 @@ import isObject from 'lodash/isObject';
 import merge from 'lodash/merge';
 import mergeWith from 'lodash/mergeWith';
 import assign from 'lodash/assign';
+import includes from 'lodash/includes';
 
 import externalCSS from './externalCSS';
-import { getValue } from './utils/values';
+import { getValue, getType } from './utils/values';
 import { isInIframe } from './utils/iframe';
+import keyfiy from './utils/keyify';
 
 import { Provider, Consumer } from './context';
 import {
@@ -19,6 +21,8 @@ import {
 } from './ipc';
 
 const PropTypes = require('prop-types');
+
+const base64Regexp = /^(data:\w+\/[a-zA-Z\+\-\.]+;base64,)?(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/gi;
 
 class Actoservice extends React.Component {
   constructor(props) {
@@ -126,6 +130,7 @@ class Actoservice extends React.Component {
         value={{
           configMap,
           isEditing,
+          apiKey: this.props.apiKey,
           updateConfig: this.updateConfig
         }}
       >
@@ -137,6 +142,7 @@ class Actoservice extends React.Component {
 
 Actoservice.propTypes = {
   editing: PropTypes.bool,
+  apiKey: PropTypes.string,
   scheme: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired
 };
 

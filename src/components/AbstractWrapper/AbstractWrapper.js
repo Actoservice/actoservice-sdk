@@ -71,6 +71,7 @@ class AbstractWrapper extends React.PureComponent {
         min={getMin(path)({ configMap: scheme })}
         title={getTitle(path)({ configMap: scheme })}
         onChange={this.handleChange}
+        apiKey={this.props.apiKey}
         type={getType(path)({ configMap: scheme })}
         value={getValue(path)({ configMap: scheme })}
       />
@@ -140,6 +141,7 @@ class AbstractWrapper extends React.PureComponent {
 AbstractWrapper.lastOpenPopover = null;
 
 AbstractWrapper.propTypes = {
+  apiKey: PropTypes.string.isRequired,
   wrapper: PropTypes.bool,
   classes: PropTypes.shape({
     container: PropTypes.string,

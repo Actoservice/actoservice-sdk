@@ -27,7 +27,7 @@ export default function withBind(paths) {
       render() {
         return (
           <Consumer>
-            {({ configMap, isEditing, updateConfig }) => {
+            {({ configMap, isEditing, updateConfig, apiKey }) => {
               const scheme = {};
               paths.forEach((path) => {
                 set(scheme, `${path}.value`, getValue(path)({ configMap }));
@@ -40,6 +40,7 @@ export default function withBind(paths) {
                 <AbstractWrapper
                   classes={this.props.classes}
                   wrapper={this.props.wrapper}
+                  apiKey={apiKey}
                   actoservice={{
                     paths,
                     scheme,

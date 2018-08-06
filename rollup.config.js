@@ -4,6 +4,7 @@ import { uglify } from 'rollup-plugin-uglify';
 import resolve from 'rollup-plugin-node-resolve';
 import image from 'rollup-plugin-image';
 import commonjs from 'rollup-plugin-commonjs';
+import { defineEnvPlugin } from './rollup.plugins';
 
 const isProd = process.env.NODE_ENV === 'production';
 const pkg = require('./package.json');
@@ -37,6 +38,9 @@ const plugins = [
       'react'
     ],
   }),
+  defineEnvPlugin({
+    __DEV__: process.env.NODE_ENV !== 'production'
+  })
 ];
 
 if (isProd) {
@@ -50,7 +54,7 @@ const external = [
 export default {
 	input: './src/index.js',
 	plugins,
-	external,
+  external,
 	context: 'window',
 	output: {
 		file: pkg.main,
