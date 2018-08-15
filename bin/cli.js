@@ -24,17 +24,26 @@ const config = Object.assign({}, defaultConfig, packageJson.actoservice);
 
 const rootRelativeEntry = path.join(process.cwd(), config.entry);
 const rootRelativeConfigMap = path.join(process.cwd(), config.configMap);
+const imageEntryPath = config.image
+  ? path.join(process.cwd(), config.image)
+  : null;
 
 let preData = {
   name: config.name,
   description: config.description,
   version: config.version,
   source: fs.createReadStream(rootRelativeEntry),
-  configMap: fs.createReadStream(rootRelativeConfigMap)
+  configMap: fs.createReadStream(rootRelativeConfigMap),
+  image: config.image
+    ? fs.createReadStream(imageEntryPath)
+    : null
 }
 
 const entryFileName = path.basename(config.entry);
 const schemeFilename = path.basename(config.configMap);
+const imageFilename = config.image
+  ? path.basename(config.image)
+  : null;
 
 if (config.assets && fs.lstatSync(config.assets).isDirectory()) {
   const assets = fs
@@ -69,7 +78,7 @@ function upload(data, { apiKey }) {
   if (!apiKey) {
     throw new Error('API key is required to upload theme');
   }
-  request.post({ url: HOST, formData: data }, { headers }, (err, res, body) => {
+  request.post({ url: HOST, formData: data, headers }, (err, res, body) => {
     if (err) {
       return console.error('upload failed', err);
     }
